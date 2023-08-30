@@ -76,7 +76,7 @@ class SMSC:
         :rtype: SendResponse
         """
         f = furl(SMSC._url).add(path="send.php").add(self.__auth)
-        if sender:
+        if self.__sender:
             f.add({"sender": self.__sender})
         f.add({"cost": 2, "phones": isinstance(to, str) and to or ",".join(to)})
         f.add(message.encode())
