@@ -41,7 +41,7 @@ class SMSC:
     def __init__(self, login: str, password: str, sender: Optional[str] = None) -> None:  # noqa: D102
         self.__login = login
         self.__password = password
-        self.__sender = sender if sender is not None else "SMSC.ru"
+        self.__sender = sender
 
     def __str__(self):
         """Represent object as string."""
@@ -75,7 +75,9 @@ class SMSC:
         :return: Returns the API answer wrapped in the `SendResponse` object
         :rtype: SendResponse
         """
-        f = furl(SMSC._url).add(path="send.php").add(self.__auth).add({"sender": self.__sender})
+        f = furl(SMSC._url).add(path="send.php").add(self.__auth)
+        if sender:
+            f.add({"sender": self.__sender})
         f.add({"cost": 2, "phones": isinstance(to, str) and to or ",".join(to)})
         f.add(message.encode())
         r = requests.get(f.url)
